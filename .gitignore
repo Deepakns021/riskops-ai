@@ -2,6 +2,8 @@
 __pycache__/
 .pytest_cache/
 .streamlit/
+!.streamlit/
+!.streamlit/config.toml
 work/
 *.py[cod]
 
