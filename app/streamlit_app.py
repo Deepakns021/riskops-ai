@@ -1,16 +1,16 @@
 from __future__ import annotations
 
 import json
-from pathlib import Path
 import sys
+from pathlib import Path
 
-import pandas as pd
+import duckdb
 import plotly.express as px
 import streamlit as st
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
-from riskops.reporting import ReviewDraft, make_review_draft  # noqa: E402
+from riskops.reporting import ReviewDraft, make_review_draft
 
 st.set_page_config(page_title="RiskOps AI", page_icon="🛡️", layout="wide")
 st.title("RiskOps AI")
@@ -22,7 +22,7 @@ if not data_path.exists():
     st.info("No local score artifact found. Follow data/README.md, then run `python -m riskops.pipeline`.")
     st.stop()
 
-df = pd.read_parquet(data_path)
+df = duckdb.sql("SELECT * FROM read_parquet(?)", params=[str(data_path)]).df()
 metrics = json.loads(metrics_path.read_text()) if metrics_path.exists() else {}
 metrics_cols = st.columns(4)
 for column, (label, key) in zip(metrics_cols, [("Precision", "precision"), ("Recall", "recall"), ("F1", "f1"), ("PR-AUC", "pr_auc")]):
