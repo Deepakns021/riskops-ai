@@ -38,6 +38,18 @@ pytest -q
 
 The first pipeline execution is deliberately local and may take time: the original event archives are multi-gigabyte. Results are only meaningful for this synthetic benchmark and must be rerun locally before being reported.
 
+### Run the dashboard immediately (demo only)
+
+To verify the interface before obtaining the official archive, run:
+
+```powershell
+$env:PYTHONPATH = "src"
+python -m riskops.demo
+streamlit run app/streamlit_app.py
+```
+
+This produces a local generated demo and a prominent in-app warning. It is not CERT data and its metrics are not benchmark results.
+
 ## Design safeguards
 
 - The answer key is not a feature and is never available to the model.

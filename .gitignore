@@ -2,12 +2,14 @@
 __pycache__/
 .pytest_cache/
 .streamlit/
+work/
 *.py[cod]
 
 # CERT material and locally produced data/model artifacts never belong in Git.
 data/raw/**
 data/answers/**
 data/processed/**
+data/demo/**
 models/**
 reports/**
 !data/raw/.gitkeep

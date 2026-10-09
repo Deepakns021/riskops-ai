@@ -18,12 +18,17 @@ st.caption("Research MVP • synthetic CERT Insider Threat Test Dataset • huma
 st.warning("This dashboard is not a production monitoring system and does not contain real employee data.")
 data_path = ROOT / "data/processed/scored_daily.parquet"
 metrics_path = ROOT / "data/processed/metrics.json"
+metadata_path = ROOT / "data/processed/run_metadata.json"
 if not data_path.exists():
-    st.info("No local score artifact found. Follow data/README.md, then run `python -m riskops.pipeline`.")
+    st.info("No local score artifact found. Run `python -m riskops.demo` for a UI demo, or follow data/README.md for the official CERT benchmark.")
     st.stop()
 
 df = duckdb.sql("SELECT * FROM read_parquet(?)", params=[str(data_path)]).df()
 metrics = json.loads(metrics_path.read_text()) if metrics_path.exists() else {}
+if metadata_path.exists():
+    metadata = json.loads(metadata_path.read_text())
+    if metadata.get("source") == "local synthetic demo":
+        st.error("DEMO MODE: this is generated local data, not CERT data. Do not present these metrics as benchmark results.")
 metrics_cols = st.columns(4)
 for column, (label, key) in zip(metrics_cols, [("Precision", "precision"), ("Recall", "recall"), ("F1", "f1"), ("PR-AUC", "pr_auc")]):
     column.metric(label, str(metrics.get(key, "—")))
