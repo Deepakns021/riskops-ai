@@ -9,7 +9,7 @@ Portfolio-grade, human-in-the-loop insider-risk analytics on the **synthetic** C
 - Chunked Pandas event aggregation and DuckDB Parquet output
 - Leakage-aware, chronological Isolation Forest baseline
 - Held-out precision, recall, F1, and PR-AUC (when both classes exist)
-- Streamlit/Plotly analyst dashboard with evidence-grounded report drafts
+- Presentation-ready Streamlit analyst workbench with ranked candidates, signal profiles, and evidence-grounded review drafts
 - n8n review-queue example that explicitly performs no automated action
 - Tests that guard label leakage and answer-key window expansion
 
@@ -26,7 +26,7 @@ git clone https://github.com/Deepakns021/riskops-ai.git
 cd riskops-ai
 py -3.10 -m venv .venv
 .\.venv\Scripts\Activate.ps1
-pip install -r requirements-dev.txt
+python -m pip install -r requirements-dev.txt
 $env:PYTHONPATH = "src"
 pytest -q
 ```
@@ -34,7 +34,7 @@ pytest -q
 1. Download `r4.2.tar.bz2` and `answers.tar.bz2` directly from the official DOI archive.
 2. Validate the official checksums; extract the required files into the ignored paths documented in [data/README.md](data/README.md).
 3. Build the local artifact: `python -m riskops.pipeline`
-4. Start the dashboard: `streamlit run app/streamlit_app.py`
+4. Start the dashboard: `python -m streamlit run app/streamlit_app.py`
 
 The first pipeline execution is deliberately local and may take time: the original event archives are multi-gigabyte. Results are only meaningful for this synthetic benchmark and must be rerun locally before being reported.
 
@@ -45,10 +45,22 @@ To verify the interface before obtaining the official archive, run:
 ```powershell
 $env:PYTHONPATH = "src"
 python -m riskops.demo
-streamlit run app/streamlit_app.py
+python -m streamlit run app/streamlit_app.py
 ```
 
 This produces a local generated demo and a prominent in-app warning. It is not CERT data and its metrics are not benchmark results.
+
+## Dashboard walkthrough
+
+The Streamlit interface is designed as a focused analyst workbench rather than a raw model-output page:
+
+1. **Review controls** — sets the percentile threshold for the candidate queue.
+2. **Review overview** — summarizes candidate volume, distinct users, threshold, and latest activity.
+3. **Ranked candidates** — highlights the highest-priority user-days in a compact bar chart and review queue.
+4. **Evidence review** — shows the selected candidate’s observed event signals and an evidence-grounded draft for a human analyst.
+5. **Methodology** — keeps evaluation details separate from the operational review flow.
+
+The included demo exists only to preview the interface. For portfolio screenshots or benchmark claims, run the official local CERT workflow and keep the synthetic-data and human-review disclaimers visible.
 
 ## Design safeguards
 
