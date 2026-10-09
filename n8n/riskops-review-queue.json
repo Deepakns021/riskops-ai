@@ -1,0 +1,16 @@
+{
+  "name": "RiskOps AI — review queue only",
+  "nodes": [
+    {
+      "parameters": {"httpMethod": "POST", "path": "riskops-review", "responseMode": "onReceived"},
+      "id": "webhook", "name": "Receive candidate", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [260, 300]
+    },
+    {
+      "parameters": {"jsCode": "const x = $json.body ?? $json; if (!x.user || !x.day || typeof x.anomaly_score !== 'number') throw new Error('Require user, day, anomaly_score'); return [{json:{...x, status:'PENDING_HUMAN_REVIEW', automated_action:'none', received_at:new Date().toISOString()}}];"},
+      "id": "validate", "name": "Validate and queue", "type": "n8n-nodes-base.code", "typeVersion": 2, "position": [500, 300]
+    }
+  ],
+  "connections": {"Receive candidate": {"main": [[{"node": "Validate and queue", "type": "main", "index": 0}]]}},
+  "settings": {"executionOrder": "v1"},
+  "meta": {"purpose": "Creates a review candidate only. Connect an approved ticketing/notification node after policy review; never automate punitive or access actions."}
+}

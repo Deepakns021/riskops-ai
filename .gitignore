@@ -1,0 +1,18 @@
+.venv/
+__pycache__/
+.pytest_cache/
+.streamlit/
+*.py[cod]
+
+# CERT material and locally produced data/model artifacts never belong in Git.
+data/raw/**
+data/answers/**
+data/processed/**
+models/**
+reports/**
+!data/raw/.gitkeep
+!data/answers/.gitkeep
+!data/processed/.gitkeep
+!models/.gitkeep
+!reports/.gitkeep
+.env
